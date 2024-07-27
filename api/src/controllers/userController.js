@@ -48,3 +48,45 @@ exports.signInUser = async (req, res) => {
     respo(res, 500, messsage);
   }
 };
+
+exports.getUserData = async (req, res) => {
+  try {
+    console.log(req.user);
+    respo(res, 200, { user: req.user });
+  } catch (error) {
+    const messsage = error?.message;
+    respo(res, 500, messsage);
+  }
+};
+
+exports.getAllDocs = async (req, res) => {
+  try {
+    const doctors = await User.find({ role: "DOC" });
+    respo(res, 200, doctors);
+  } catch (error) {
+    const messsage = error?.message;
+    respo(res, 500, messsage);
+  }
+};
+
+exports.saveDocsPosition = async (req, res) => {
+  try {
+    const { position } = req.body;
+
+    const newUser = {
+      ...JSON.parse(JSON.stringify(req.user)),
+      userDetails: {
+        position,
+      },
+    };
+
+    console.log(newUser);
+    const updatedUser = await User.findByIdAndUpdate(req.user._id, newUser, {
+      new: true,
+    });
+    respo(res, 200, updatedUser);
+  } catch (error) {
+    const messsage = error?.message;
+    respo(res, 500, messsage);
+  }
+};

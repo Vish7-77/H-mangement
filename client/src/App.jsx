@@ -4,14 +4,20 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Home from "./pages/Home";
 import Loader from "./components/Loader";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Toaster } from "react-hot-toast";
+import { fetchUserData } from "./store/action";
 
 const App = () => {
   const { loading } = useSelector((e) => e.loadingReducer);
-  const { user } = useSelector((e) => e.userReducer);
+  const { user, userData } = useSelector((e) => e.userReducer);
+  const dispatch = useDispatch();
 
-
+  useEffect(() => {
+    if (!userData) {
+      fetchUserData(dispatch);
+    }
+  }, [userData]);
 
   return (
     <BrowserRouter>
