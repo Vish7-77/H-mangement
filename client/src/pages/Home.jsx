@@ -1,9 +1,6 @@
-import React, { useState } from "react";
+import React  from "react";
 import Profile from "../components/Profile";
 import { useSelector } from "react-redux";
-import Tabs from "../components/Tabs";
-import DoctorsList from "../components/DoctorsList";
-import Appointments from "../components/Appointments";
 import PatientsTabs from "../components/PatientsTabs";
 import DoctorsTabs from "../components/DoctorsTabs";
 

@@ -72,7 +72,6 @@ exports.getAllDocs = async (req, res) => {
 exports.saveDocsPosition = async (req, res) => {
   try {
     const { position } = req.body;
-
     const newUser = {
       ...JSON.parse(JSON.stringify(req.user)),
       userDetails: {

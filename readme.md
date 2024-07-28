@@ -5,5 +5,6 @@
          
          patient
             -> he /she can book a slot for doctors apponintment
+            -> patient can search a doctor any specific position:   
 
 

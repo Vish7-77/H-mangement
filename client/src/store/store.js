@@ -1,11 +1,17 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { loadingReducer, userReducer, doctorsListReducer } from "./reducer.js";
+import {
+  loadingReducer,
+  userReducer,
+  doctorsListReducer,
+  myAppointmentsReducer,
+} from "./reducer.js";
 
 const store = configureStore({
   reducer: {
     loadingReducer,
     userReducer,
     doctorsListReducer,
+    myAppointmentsReducer,
   },
 });
 

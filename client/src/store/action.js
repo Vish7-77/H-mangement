@@ -1,5 +1,6 @@
 import axios from "axios";
 import toast from "react-hot-toast";
+import { filterTimings } from "../constants";
 const api = "http://localhost:2300/api/v1";
 
 export const signUpUser = async (dispatch, formData, cb) => {
@@ -62,7 +63,7 @@ export const fetchUserData = async (dispatch) => {
   }
 };
 
-export const fetchDoctors = async (dispatch) => {
+export const fetchDoctors = async (dispatch, setDotorsList) => {
   try {
     dispatch({ type: "startLoading" });
     const API = api + "/doctors";
@@ -73,6 +74,7 @@ export const fetchDoctors = async (dispatch) => {
       type: "listDoctors",
       payload: data.data,
     });
+    setDotorsList(data.data);
   } catch (error) {
     toast.error(error?.response?.data?.data || "something went wrong");
     console.log(error?.response?.data?.data);
@@ -80,6 +82,7 @@ export const fetchDoctors = async (dispatch) => {
     dispatch({ type: "stopLoading" });
   }
 };
+
 export const updatedPosition = async (dispatch, position) => {
   try {
     dispatch({ type: "startLoading" });
@@ -96,6 +99,86 @@ export const updatedPosition = async (dispatch, position) => {
     );
     console.log("updated Data", data);
     toast.success("Updated Successfully");
+  } catch (error) {
+    toast.error(error?.response?.data?.data || "something went wrong");
+    console.log(error?.response?.data?.data);
+  } finally {
+    dispatch({ type: "stopLoading" });
+  }
+};
+export const getDocTimings = async (
+  dispatch,
+  doctorsId,
+  appDate,
+  setTimings
+) => {
+  try {
+    dispatch({ type: "startLoading" });
+    const API =
+      api + `/appointment/timings?doctorsId=${doctorsId}&dateAdded=${appDate}`;
+    const token = localStorage.getItem("token");
+    const { data } = await axios.get(API, {
+      headers: { token },
+    });
+    console.log(data.data);
+
+    if (data.data.length >= 5) {
+      toast.error("No available timings");
+      return;
+    }
+    setTimings(filterTimings(data.data));
+  } catch (error) {
+    toast.error(error?.response?.data?.data || "something went wrong");
+    console.log(error?.response?.data?.data);
+  } finally {
+    dispatch({ type: "stopLoading" });
+  }
+};
+
+export const createNewAppointment = async (
+  dispatch,
+  doctorsId,
+  appDate,
+  timeAdded,
+  cb
+) => {
+  try {
+    dispatch({ type: "startLoading" });
+    const API = api + `/appointment`;
+    const token = localStorage.getItem("token");
+    const { data } = await axios.post(
+      API,
+      {
+        doctorsId: doctorsId,
+        dateAdded: appDate,
+        timeAdded: timeAdded,
+      },
+      {
+        headers: { token },
+      }
+    );
+    console.log(data.data);
+    toast.success("Booked the appointment");
+    cb();
+  } catch (error) {
+    toast.error(error?.response?.data?.data || "something went wrong");
+    console.log(error?.response?.data?.data);
+  } finally {
+    dispatch({ type: "stopLoading" });
+  }
+};
+
+export const getAllMyAppointments = async (dispatch, cb) => {
+  try {
+    dispatch({ type: "startLoading" });
+    const API = api + `/appointments`;
+    const token = localStorage.getItem("token");
+    const { data } = await axios.get(API, {
+      headers: { token },
+    });
+    console.log(data.data);
+    dispatch({ type: "setAppointments", payload: data.data });
+    cb(data.data);
   } catch (error) {
     toast.error(error?.response?.data?.data || "something went wrong");
     console.log(error?.response?.data?.data);

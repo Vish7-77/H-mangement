@@ -26,3 +26,11 @@ export const doctorsListReducer = createReducer(
     });
   }
 );
+export const myAppointmentsReducer = createReducer(
+  { appointments: null },
+  (builder) => {
+    builder.addCase("setAppointments", (state, action) => {
+      state.appointments = action.payload;
+    });
+  }
+);
